@@ -32,7 +32,7 @@ services:
       context: ./user-microservice-frontend
     container_name: user_frontend
     ports:
-      - "3000:3000"   # Host port mapping stays the same
+      - "3000:80"   # Host port mapping stays the same
     depends_on:
       - backend
     networks:

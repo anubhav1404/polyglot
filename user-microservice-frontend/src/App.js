@@ -5,7 +5,7 @@ import { AlertCircle, CheckCircle, Loader, Users, Edit, Trash2, Plus, Search, Me
 const CONFIG = {
   development: {
     USER_SERVICE_URL: '/api',
-    CLAUDE_SERVICE_URL: 'http://54.196.214.231:8081' // Assuming the Claude service runs on a different port
+    CLAUDE_SERVICE_URL: '/ai' // Assuming the Claude service runs on a different port
   },
   production: {
     USER_SERVICE_URL: 'https://api.yourdomain.com',
@@ -97,7 +97,7 @@ class UserService {
  */
 class ClaudeService {
   constructor() {
-    this.baseUrl = window.APP_CONFIG?.CLAUDE_SERVICE_URL || 'http://54.196.214.231:8081';
+    this.baseUrl = window.APP_CONFIG?.CLAUDE_SERVICE_URL || '/ai';
   }
 
   /**
