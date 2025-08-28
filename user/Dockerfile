@@ -8,7 +8,7 @@ RUN mvn dependency:go-offline -B
 
 # Copy source code and build the application
 COPY src ./src
-RUN mvn clean install -DskipTests
+RUN mvn clean install
 
 # === STAGE 2: Runtime Stage ===
 FROM openjdk:17-jdk-alpine AS runtime

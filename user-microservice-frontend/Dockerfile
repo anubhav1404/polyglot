@@ -1,29 +1,31 @@
-# Use the official Node.js image as the base image
-FROM node:18-alpine
+# === STAGE 1: Build Stage ===
+FROM node:18-alpine AS builder
 
-# Create a non-root user and group
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
-COPY package*.json ./
-
 # Install dependencies
-RUN npm install
+COPY package*.json ./
+RUN npm ci
 
-# Copy the rest of the application files
+# Copy app source and build
 COPY . .
+RUN npm run build
 
-# Change ownership of the application files to the non-root user
-RUN chown -R appuser:appgroup /app
+# === STAGE 2: Production Stage ===
+FROM nginx:alpine
 
-# Set the user to run the application
-USER appuser
+# Remove default nginx website
+RUN rm -rf /usr/share/nginx/html/*
 
-# Expose the port the app will run on
-EXPOSE 3000
+# Copy build output to nginx html directory
+COPY --from=builder /app/build /usr/share/nginx/html
 
-# Command to run the application
-CMD ["npm", "start"]
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

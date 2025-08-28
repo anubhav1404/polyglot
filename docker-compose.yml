@@ -1,35 +1,44 @@
 version: '3.8'
 
 services:
-  # The Backend Service
-  backend:  # <-- This is the missing line
+  # Backend Service
+  backend:
     build:
       context: ./user
-    ports:
-      - "8080:8080"
     container_name: user_backend
+    ports:
+      - "8080:8080"   # Host port mapping stays the same
     depends_on:
       - ai_service
+    networks:
+      - app_network
 
-  # The AI Service (which uses Bedrock)
+  # AI Service
   ai_service:
     build:
       context: ./translate
     container_name: user_ai_service
     ports:
-      - "8081:8081"
+      - "8081:8081"   # Host port mapping stays the same
     environment:
-      # Pass environment variables from the .env file
-      - AWS_ACCESS_KEY_ID=
-      - AWS_SECRET_ACCESS_KEY=
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+    networks:
+      - app_network
 
-  # The Frontend Service (React)
+  # Frontend Service
   frontend:
     build:
       context: ./user-microservice-frontend
     container_name: user_frontend
     ports:
-      - "3000:3000"
-    # Ensure the frontend starts after the backend is ready
+      - "3000:80"   # Host port mapping stays the same
     depends_on:
       - backend
+    networks:
+      - app_network
+
+# User-defined network for DNS-like behavior
+networks:
+  app_network:
+    driver: bridge

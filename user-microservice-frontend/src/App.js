@@ -4,8 +4,8 @@ import { AlertCircle, CheckCircle, Loader, Users, Edit, Trash2, Plus, Search, Me
 // Configuration for different environments
 const CONFIG = {
   development: {
-    USER_SERVICE_URL: 'http://54.157.248.106:8080',
-    CLAUDE_SERVICE_URL: 'http://54.157.248.106:8081' // Assuming the Claude service runs on a different port
+    USER_SERVICE_URL: '/api',
+    CLAUDE_SERVICE_URL: '/ai' // Assuming the Claude service runs on a different port
   },
   production: {
     USER_SERVICE_URL: 'https://api.yourdomain.com',
@@ -21,7 +21,7 @@ window.APP_CONFIG = CONFIG.development;
  */
 class UserService {
   constructor() {
-    this.baseUrl = window.APP_CONFIG?.USER_SERVICE_URL || 'http://54.157.248.106:8080';
+    this.baseUrl = window.APP_CONFIG?.USER_SERVICE_URL || '/api';
   }
 
   async request(endpoint, options = {}) {
@@ -97,7 +97,7 @@ class UserService {
  */
 class ClaudeService {
   constructor() {
-    this.baseUrl = window.APP_CONFIG?.CLAUDE_SERVICE_URL || 'http://54.157.248.106:8081';
+    this.baseUrl = window.APP_CONFIG?.CLAUDE_SERVICE_URL || '/ai';
   }
 
   /**
