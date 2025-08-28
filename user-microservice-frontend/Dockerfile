@@ -1,30 +1,31 @@
-# Use a specific version of Node.js for consistency
+# === STAGE 1: Build Stage ===
 FROM node:18-alpine AS builder
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
+
+# Install dependencies
 COPY package*.json ./
 RUN npm ci
 
-# Copy the rest of the application files
+# Copy app source and build
 COPY . .
+RUN npm run build
 
-FROM node:18-alpine
+# === STAGE 2: Production Stage ===
+FROM nginx:alpine
 
-# Create a non-root user and group
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Remove default nginx website
+RUN rm -rf /usr/share/nginx/html/*
 
-# Set the working directory
-WORKDIR /app
+# Copy build output to nginx html directory
+COPY --from=builder /app/build /usr/share/nginx/html
 
-COPY --from=builder /app ./
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Change ownership of the application files to the non-root user
-RUN chown -R appuser:appgroup /app
+# Expose port 80
+EXPOSE 80
 
-# Switch to the non-root user
-USER appuser
-
-EXPOSE 3000
-
-CMD ["npm", "start"]
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
