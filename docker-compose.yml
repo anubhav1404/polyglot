@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   # The Backend Service
-  backend:  # <-- This is the missing line
+  backend:
     build:
       context: ./user
     ports:
@@ -19,9 +19,9 @@ services:
     ports:
       - "8081:8081"
     environment:
-      # Pass environment variables from the .env file
-      - AWS_ACCESS_KEY_ID=
-      - AWS_SECRET_ACCESS_KEY=
+      # Correctly referencing variables from the .env file
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 
   # The Frontend Service (React)
   frontend:
@@ -30,6 +30,5 @@ services:
     container_name: user_frontend
     ports:
       - "3000:3000"
-    # Ensure the frontend starts after the backend is ready
     depends_on:
       - backend

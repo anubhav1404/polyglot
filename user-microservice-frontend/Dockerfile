@@ -1,29 +1,30 @@
-# Use the official Node.js image as the base image
+# Use a specific version of Node.js for consistency
+FROM node:18-alpine AS builder
+
+# Set the working directory
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+
+# Copy the rest of the application files
+COPY . .
+
 FROM node:18-alpine
 
 # Create a non-root user and group
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the rest of the application files
-COPY . .
+COPY --from=builder /app ./
 
 # Change ownership of the application files to the non-root user
 RUN chown -R appuser:appgroup /app
 
-# Set the user to run the application
+# Switch to the non-root user
 USER appuser
 
-# Expose the port the app will run on
 EXPOSE 3000
 
-# Command to run the application
 CMD ["npm", "start"]
