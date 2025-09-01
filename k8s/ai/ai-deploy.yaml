@@ -21,7 +21,7 @@ spec:
             - containerPort: 8081
           env:
             - name: AWS_REGION
-              value: "us-east-1"   # replace with your AWS region
+              value: "us-east-1"
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -32,3 +32,11 @@ spec:
                 secretKeyRef:
                   name: aws-credentials
                   key: secretKey
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "200Mi"
+            limits:
+              cpu: "200m"
+              memory: "512Mi"
+

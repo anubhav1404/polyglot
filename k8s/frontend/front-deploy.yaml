@@ -17,5 +17,12 @@ spec:
         image: anubhav1404/user-frotend:v3
         ports:
         - containerPort: 80
-        command: ["nginx", "-g", "daemon off;"]  # run NGINX with default config only
+        command: ["nginx", "-g", "daemon off;"]
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "20Mi"
+          limits:
+            cpu: "50m"
+            memory: "64Mi"
 
