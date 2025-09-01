@@ -6,7 +6,6 @@ spec:
   selector:
     app: ai-service
   ports:
-    - protocol: TCP
-      port: 80          # external service port
-      targetPort: 8081  # container port inside pod
-  type: ClusterIP  # or ClusterIP if internal only
+    - port: 80
+      targetPort: 8081
+
