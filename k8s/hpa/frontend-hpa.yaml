@@ -9,12 +9,12 @@ spec:
     kind: Deployment
     name: frontend-deployment   # target your frontend deployment
   minReplicas: 1
-  maxReplicas: 5
+  maxReplicas: 3
   metrics:
   - type: Resource
     resource:
       name: cpu
       target:
         type: Utilization
-        averageUtilization: 50
+        averageUtilization: 80
 

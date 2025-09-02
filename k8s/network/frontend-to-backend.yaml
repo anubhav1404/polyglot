@@ -9,6 +9,7 @@ spec:
       app: backend
   policyTypes:
   - Ingress
+  - Egress
   ingress:
   - from:
     - namespaceSelector:
@@ -20,4 +21,12 @@ spec:
     ports:
     - protocol: TCP
       port: 8080
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - protocol: TCP
+      port: 5432
 
